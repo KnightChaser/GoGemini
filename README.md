@@ -1,2 +1,2 @@
 # GoGemini
-Using Gemini API with Go
+A personal usage of Gemini API with Go
