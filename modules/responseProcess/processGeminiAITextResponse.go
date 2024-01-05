@@ -1,14 +1,9 @@
-package main
+package responseProcess
 
 import (
-	"context"
-	"encoding/json"
 	"fmt"
-	"log"
-	"main/modules/apikey"
 
 	"github.com/google/generative-ai-go/genai"
-	"google.golang.org/api/option"
 )
 
 type GeminiTextResponseSafetyRating struct {
@@ -25,43 +20,8 @@ type GeminiTextResponseStructure struct {
 	SafetyRating  map[string]GeminiTextResponseSafetyRating
 }
 
-func main() {
-	generateTextFromTextOnlyInput("gemini-pro", "Create a random quote related to programming or programmers")
-}
-
-// getAIModelName: The GenAI model to use like "Gemini-Pro"
-// question		 : The input query to the model
-func generateTextFromTextOnlyInput(genAIModelName string, question string) {
-
-	apiKeyString := apikey.GetGoogleGenAIAPIKey("default")
-
-	// Ready to bring the model
-	context := context.Background()
-	fmt.Printf("Obtained an API KEY: %s\n", apiKeyString)
-	client, err := genai.NewClient(context, option.WithAPIKey(apiKeyString))
-	if err != nil {
-		log.Fatal(err)
-		return
-	}
-	defer client.Close()
-
-	// For text-only input, use the gemini-pro model
-	model := client.GenerativeModel(genAIModelName)
-	modelInput := question
-	fmt.Printf("Question: %s\n", modelInput)
-	response, err := model.GenerateContent(context, genai.Text(modelInput))
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// printGenAIResponse(response)
-	result, _ := getGeminiAITextOnlyResponseStruct(question, response)
-	resultInJSON, _ := json.MarshalIndent(result, "", "	")
-	fmt.Println(string(resultInJSON))
-
-}
-
-func getGeminiAITextOnlyResponseStruct(question string, response *genai.GenerateContentResponse) (GeminiTextResponseStructure, error) {
+// Using the custom response object of "GeminiTextResponseStructure", preprocess the raw data from the API to the normal Go data structure with Go datatypes.
+func GetGeminiAITextOnlyResponseStruct(question string, response *genai.GenerateContentResponse) (GeminiTextResponseStructure, error) {
 	var responseStructure GeminiTextResponseStructure
 	responseStructure.Question = question
 	for _, candidates := range response.Candidates {
@@ -77,7 +37,6 @@ func getGeminiAITextOnlyResponseStruct(question string, response *genai.Generate
 			responseStructure.TokenCount = uint32(candidates.TokenCount)
 			responseStructure.SafetyRating = make(map[string]GeminiTextResponseSafetyRating)
 			for _, safetyData := range candidates.SafetyRatings {
-				fmt.Println(safetyData)
 				safetyCategory := fmt.Sprintf("%s", safetyData.Category)
 
 				// Check if the map entry exists, create it if not

@@ -1,0 +1,27 @@
+{
+	"Question": "Give me any famous quote from popular people",
+	"ResponseCount": 1,
+	"Response": [
+		"1. \"The greatest glory in living lies not in never falling, but in rising every time we fall.\" - Nelson Mandela\n2. \"The future belongs to those who believe in the beauty of their dreams.\" - Eleanor Roosevelt\n3. \"Don't let yesterday take up too much of today.\" - Will Rogers\n4. \"We are not makers of history. We are made by history.\" - Martin Luther King, Jr.\n5. \"The only person you are destined to become is the person you decide to be.\" - Ralph Waldo Emerson\n6. \"Change will not come if we wait for some other person or some other time. We are the ones we've been waiting for. We are the change that we seek.\" - Barack Obama\n7. \"I have learned that success is to be measured not so much by the position that one has reached in life as by the obstacles which he has had to overcome while trying to succeed.\" - Booker T. Washington\n8. \"The greatest wealth is to live content with little.\" - Plato\n9. \"Happiness is not something ready made. It comes from your own actions.\" - Dalai Lama\n10. \"The only thing we have to fear is fear itself.\" - Franklin D. Roosevelt"
+	],
+	"FininshReason": "FinishReasonStop",
+	"TokenCount": 0,
+	"SafetyRating": {
+		"HarmCategoryDangerousContent": {
+			"Probability": "HarmProbabilityNegligible",
+			"BlockedBySafetyPolicy": false
+		},
+		"HarmCategoryHarassment": {
+			"Probability": "HarmProbabilityNegligible",
+			"BlockedBySafetyPolicy": false
+		},
+		"HarmCategoryHateSpeech": {
+			"Probability": "HarmProbabilityNegligible",
+			"BlockedBySafetyPolicy": false
+		},
+		"HarmCategorySexuallyExplicit": {
+			"Probability": "HarmProbabilityNegligible",
+			"BlockedBySafetyPolicy": false
+		}
+	}
+}
