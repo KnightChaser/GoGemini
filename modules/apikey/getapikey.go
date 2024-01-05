@@ -6,9 +6,17 @@ import (
 	"os"
 )
 
-func GetGoogleGenAIAPIKey() string {
+func GetGoogleGenAIAPIKey(apiKeyFilepath string) string {
 	// Setup API key (the given API file will contain text of API key)
-	geminiAPIkeyFilePath := "modules/apikey/apikey.txt"
+
+	var geminiAPIkeyFilePath string
+	if apiKeyFilepath == "default" {
+		// default
+		geminiAPIkeyFilePath = "modules/apikey/apikey.txt"
+	} else {
+		geminiAPIkeyFilePath = apiKeyFilepath
+	}
+
 	geminiAPIKey, err := os.ReadFile(geminiAPIkeyFilePath)
 	if err != nil {
 		fmt.Printf("Failed to load the API key (Expected filepath: %v)\n", geminiAPIkeyFilePath)

@@ -12,7 +12,7 @@ import (
 
 func main() {
 
-	apiKeyString := apikey.GetGoogleGenAIAPIKey()
+	apiKeyString := apikey.GetGoogleGenAIAPIKey("default")
 
 	// Ready to bring the model
 	context := context.Background()

@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 	"main/modules/apikey"
@@ -10,9 +11,29 @@ import (
 	"google.golang.org/api/option"
 )
 
-func main() {
+type GeminiTextResponseSafetyRating struct {
+	Probability           string
+	BlockedBySafetyPolicy bool
+}
 
-	apiKeyString := apikey.GetGoogleGenAIAPIKey()
+type GeminiTextResponseStructure struct {
+	Question      string
+	ResponseCount uint32
+	Response      []string
+	FininshReason string
+	TokenCount    uint32
+	SafetyRating  map[string]GeminiTextResponseSafetyRating
+}
+
+func main() {
+	generateTextFromTextOnlyInput("gemini-pro", "Create a random quote related to programming or programmers")
+}
+
+// getAIModelName: The GenAI model to use like "Gemini-Pro"
+// question		 : The input query to the model
+func generateTextFromTextOnlyInput(genAIModelName string, question string) {
+
+	apiKeyString := apikey.GetGoogleGenAIAPIKey("default")
 
 	// Ready to bring the model
 	context := context.Background()
@@ -25,38 +46,59 @@ func main() {
 	defer client.Close()
 
 	// For text-only input, use the gemini-pro model
-	model := client.GenerativeModel("gemini-pro")
-	modelInput := "Explain the mechanism of LLM(Large Language Models)s briefly."
+	model := client.GenerativeModel(genAIModelName)
+	modelInput := question
 	fmt.Printf("Question: %s\n", modelInput)
 	response, err := model.GenerateContent(context, genai.Text(modelInput))
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	printGenAIResponse(response)
+	// printGenAIResponse(response)
+	result, _ := getGeminiAITextOnlyResponseStruct(question, response)
+	resultInJSON, _ := json.MarshalIndent(result, "", "	")
+	fmt.Println(string(resultInJSON))
 
 }
 
-func printGenAIResponse(response *genai.GenerateContentResponse) {
+func getGeminiAITextOnlyResponseStruct(question string, response *genai.GenerateContentResponse) (GeminiTextResponseStructure, error) {
+	var responseStructure GeminiTextResponseStructure
+	responseStructure.Question = question
 	for _, candidates := range response.Candidates {
 		if candidates.Content != nil {
 			// response text
-			for index, part := range candidates.Content.Parts {
-				fmt.Printf("Response(#%d): %v\n", index, part)
+			for _, part := range candidates.Content.Parts {
+				responseStructure.ResponseCount += 1
+				responseStructure.Response = append(responseStructure.Response, fmt.Sprintf("%s", part))
 			}
-			fmt.Println("---------------------------------------------------")
 
 			// metadata
-			fmt.Printf("FinishReason: %v\n", candidates.FinishReason)
-			fmt.Printf("CitationMetadata: %v\n", candidates.CitationMetadata)
-			fmt.Printf("TokenCount: %d\n", candidates.TokenCount)
+			responseStructure.FininshReason = fmt.Sprintf("%s", candidates.FinishReason)
+			responseStructure.TokenCount = uint32(candidates.TokenCount)
+			responseStructure.SafetyRating = make(map[string]GeminiTextResponseSafetyRating)
 			for _, safetyData := range candidates.SafetyRatings {
-				fmt.Printf("SafetyRatings: %v(%v), Blocked: %v\n", safetyData.Category, safetyData.Probability, safetyData.Blocked)
+				fmt.Println(safetyData)
+				safetyCategory := fmt.Sprintf("%s", safetyData.Category)
+
+				// Check if the map entry exists, create it if not
+				if _, ok := responseStructure.SafetyRating[safetyCategory]; !ok {
+					responseStructure.SafetyRating[safetyCategory] = GeminiTextResponseSafetyRating{}
+				}
+
+				// Create an instance of GeminiTextResponseSafetyRating
+				safetyRating := responseStructure.SafetyRating[safetyCategory]
+
+				// Assign values to the struct fields
+				safetyRating.BlockedBySafetyPolicy = safetyData.Blocked
+				safetyRating.Probability = fmt.Sprintf("%s", safetyData.Probability)
+
+				// Update the map entry
+				responseStructure.SafetyRating[safetyCategory] = safetyRating
 			}
-			fmt.Println("===================================================")
+
 		} else {
-			fmt.Println("Failed to receive data from Google Gen. API")
-			return
+			return GeminiTextResponseStructure{}, fmt.Errorf("Failed to receive data from Google Gen. API")
 		}
 	}
+	return responseStructure, nil
 }
