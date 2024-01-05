@@ -1,0 +1,23 @@
+package apikey
+
+import (
+	"fmt"
+	"log"
+	"os"
+)
+
+func GetGoogleGenAIAPIKey() string {
+	// Setup API key (the given API file will contain text of API key)
+	geminiAPIkeyFilePath := "modules/apikey/apikey.txt"
+	geminiAPIKey, err := os.ReadFile(geminiAPIkeyFilePath)
+	if err != nil {
+		fmt.Printf("Failed to load the API key (Expected filepath: %v)\n", geminiAPIkeyFilePath)
+		log.Fatal(err)
+		return "ERR"
+	}
+
+	// Convert geminiAPIKey from []byte to string
+	apiKeyString := string(geminiAPIKey)
+
+	return apiKeyString
+}
