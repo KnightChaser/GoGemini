@@ -8,6 +8,7 @@ import (
 	"main/modules/responseProcess"
 )
 
+// main testing
 func main() {
 	// Prepare the model
 	modelName := "gemini-pro"

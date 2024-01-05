@@ -6,6 +6,7 @@ import (
 	"os"
 )
 
+// Grab the API key for the service usage, reading API key from the designated file.
 func GetGoogleGenAIAPIKey(apiKeyFilepath string) string {
 	// Setup API key (the given API file will contain text of API key)
 

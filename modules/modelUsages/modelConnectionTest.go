@@ -2,7 +2,6 @@ package modelUsages
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"main/modules/apikey"
 
@@ -10,14 +9,14 @@ import (
 	"google.golang.org/api/option"
 )
 
-// Let's try to select the model!
+// Let's try to select the model! Check the existence and availability of the model provided in Google Gen. AI by the given name
 func ModelConnectionTest(modelName string) (bool, error) {
 
 	apiKeyString := apikey.GetGoogleGenAIAPIKey("default")
 
 	// Ready to bring the model
 	context := context.Background()
-	fmt.Printf("Obtained an API KEY: %s\n", apiKeyString)
+	// fmt.Printf("Obtained an API KEY: %s\n", apiKeyString)
 	client, err := genai.NewClient(context, option.WithAPIKey(apiKeyString))
 	if err != nil {
 		return false, err

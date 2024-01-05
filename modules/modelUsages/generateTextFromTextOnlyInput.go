@@ -10,15 +10,14 @@ import (
 	"google.golang.org/api/option"
 )
 
-// getAIModelName: The GenAI model to use like "Gemini-Pro"
-// question		 : The input query to the model
+// Send a single text query to the model and receive the response from the server
 func GenerateTextFromTextOnlyInput(genAIModelName string, question string) *genai.GenerateContentResponse {
 
 	apiKeyString := apikey.GetGoogleGenAIAPIKey("default")
 
 	// Ready to bring the model
 	context := context.Background()
-	fmt.Printf("Obtained an API KEY: %s\n", apiKeyString)
+	// fmt.Printf("Obtained an API KEY: %s\n", apiKeyString)
 	client, err := genai.NewClient(context, option.WithAPIKey(apiKeyString))
 	if err != nil {
 		log.Panic(err)
