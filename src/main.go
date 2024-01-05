@@ -3,13 +3,20 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"main/modules/modelUsages"
 	"main/modules/responseProcess"
 )
 
 func main() {
-	// ask a question and receive an answer of it
+	// Prepare the model
 	modelName := "gemini-pro"
+	if _, error := modelUsages.ModelConnectionTest(modelName); error != nil {
+		log.Fatal(fmt.Sprintf("Failed to bring the model \"%v\" from the server\n", modelName))
+		return
+	}
+
+	// ask a question and receive an answer of it
 	question := "Give me any famous quote from popular people"
 	response := modelUsages.GenerateTextFromTextOnlyInput(modelName, question)
 
