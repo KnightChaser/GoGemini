@@ -11,7 +11,8 @@ import (
 // main testing
 func main() {
 	// modelTextInputTextOutput()
-	modelMultimoalInputTextOutput()
+	// modelMultimoalInputTextOutput()
+	modelUsages.GenerateTextChatSession("gemini-pro")
 }
 
 // An example usage of
