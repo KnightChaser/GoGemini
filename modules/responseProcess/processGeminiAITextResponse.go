@@ -14,6 +14,7 @@ type GeminiTextResponseSafetyRating struct {
 type GeminiTextResponseStructure struct {
 	Question      string
 	ResponseCount uint32
+	role          string
 	Response      []string
 	FininshReason string
 	TokenCount    uint32
@@ -33,6 +34,7 @@ func GetGeminiAITextOnlyResponseStruct(question string, response *genai.Generate
 			}
 
 			// metadata
+			responseStructure.role = candidates.Content.Role
 			responseStructure.FininshReason = fmt.Sprintf("%s", candidates.FinishReason)
 			responseStructure.TokenCount = uint32(candidates.TokenCount)
 			responseStructure.SafetyRating = make(map[string]GeminiTextResponseSafetyRating)
