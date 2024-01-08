@@ -30,6 +30,25 @@ func GenerateTextChatSession(genAIModelName string) {
 
 	model := client.GenerativeModel("gemini-pro")
 	chatSession := model.StartChat()
+	// Disable not funny safety setting
+	model.SafetySettings = []*genai.SafetySetting{
+		{
+			Category:  genai.HarmCategoryDangerousContent,
+			Threshold: genai.HarmBlockNone,
+		},
+		{
+			Category:  genai.HarmCategoryHarassment,
+			Threshold: genai.HarmBlockNone,
+		},
+		{
+			Category:  genai.HarmCategoryHateSpeech,
+			Threshold: genai.HarmBlockNone,
+		},
+		{
+			Category:  genai.HarmCategorySexuallyExplicit,
+			Threshold: genai.HarmBlockNone,
+		},
+	}
 	chatSession.History = []*genai.Content{}
 
 	fmt.Printf("Chat session with Gemini AI Model(%s) started.\n", genAIModelName)
