@@ -13,6 +13,7 @@ func main() {
 	// modelTextInputTextOutput()
 	// modelMultimoalInputTextOutput()
 	modelUsages.GenerateTextChatSession("gemini-pro")
+	// modelUsages.GenerateTextChatSessionStreaming("gemini-pro")
 }
 
 // An example usage of

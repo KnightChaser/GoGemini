@@ -6,10 +6,9 @@ import (
 	"fmt"
 	"log"
 	"main/modules/apikey"
+	"main/modules/modelUsages/messageTextProcessing"
 	"main/modules/responseProcess"
 	"os"
-	"regexp"
-	"strings"
 
 	"github.com/fatih/color"
 	"github.com/google/generative-ai-go/genai"
@@ -74,34 +73,9 @@ func GenerateTextChatSession(genAIModelName string) {
 		result, _ := responseProcess.GetGeminiAITextOnlyResponseStruct(question, response)
 		answer := result.Response[0]
 		cyanColorBoldPrint.Printf(" - %s\n", genAIModelName)
-		fmt.Println(boldifyTextInMarkdownRule(answer))
-		addMessageToChatSessionHistory(chatSession, "user", question)
-		addMessageToChatSessionHistory(chatSession, "model", answer)
+		fmt.Println(messageTextProcessing.BoldifyTextInMarkdownRule(answer))
+		messageTextProcessing.AddMessageToChatSessionHistory(chatSession, "user", question)
+		messageTextProcessing.AddMessageToChatSessionHistory(chatSession, "model", answer)
 	}
 
-}
-
-func addMessageToChatSessionHistory(chatSession *genai.ChatSession, role string, text string) {
-	message := &genai.Content{
-		Parts: []genai.Part{
-			genai.Text(text),
-		},
-		Role: role,
-	}
-	chatSession.History = append(chatSession.History, message)
-}
-
-func boldifyTextInMarkdownRule(input string) string {
-	// Define a regular expression to match double asterisks within words
-	re := regexp.MustCompile(`\*\*(.+?)\*\*`)
-
-	// Replace double asterisks with Markdown bold syntax
-	modifiedInput := re.ReplaceAllStringFunc(input, func(match string) string {
-		word := strings.Trim(match, "**")
-		boldPrint := color.New(color.Bold)
-		boldWord := boldPrint.Sprintf("%s", word)
-		return boldWord
-	})
-
-	return modifiedInput
 }
