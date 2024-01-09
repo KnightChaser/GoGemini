@@ -88,10 +88,11 @@ func GenerateTextChatSessionStreaming(genAIModelName string) {
 
 			result, _ := responseProcess.GetGeminiAITextOnlyResponseStruct(question, response)
 			answerIterationFragment := result.Response[0]
-			fmt.Println(responseProcess.BoldifyTextInMarkdownRule(answerIterationFragment))
+			fmt.Print(responseProcess.BoldifyTextInMarkdownRule(answerIterationFragment))
 			answer = answer + answerIterationFragment
 		}
 
+		fmt.Println()
 		responseProcess.AddMessageToChatSessionHistory(chatSession, "user", question)
 		responseProcess.AddMessageToChatSessionHistory(chatSession, "model", answer)
 	}
