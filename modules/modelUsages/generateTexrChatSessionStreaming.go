@@ -53,6 +53,7 @@ func GenerateTextChatSessionStreaming(genAIModelName string) {
 	fmt.Printf("Chat session with Gemini AI Model(%s) started.\n", genAIModelName)
 	yellowColorBoldPrint := color.New(color.FgYellow, color.Bold)
 	cyanColorBoldPrint := color.New(color.FgCyan, color.Bold)
+	whiteColorItalicPrint := color.New(color.FgWhite, color.Italic)
 	// Start chat session endlessly. User -> Model -> User -> Model
 	for {
 		// Receive user
@@ -64,6 +65,13 @@ func GenerateTextChatSessionStreaming(genAIModelName string) {
 		if err != nil {
 			log.Fatal(err)
 		}
+
+		// Counting question token
+		tokenQtyResponse, error := model.CountTokens(context, genai.Text(question))
+		if error != nil {
+			log.Fatal(err)
+		}
+		whiteColorItalicPrint.Printf("...Prompt length: %d tokens\n", tokenQtyResponse.TotalTokens)
 
 		responseIterative := chatSession.SendMessageStream(context, genai.Text(question))
 		var answer string
