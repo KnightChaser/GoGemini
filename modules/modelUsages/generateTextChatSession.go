@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"log"
 	"main/modules/apikey"
-	"main/modules/modelUsages/messageTextProcessing"
 	"main/modules/responseProcess"
 	"os"
 
@@ -73,9 +72,9 @@ func GenerateTextChatSession(genAIModelName string) {
 		result, _ := responseProcess.GetGeminiAITextOnlyResponseStruct(question, response)
 		answer := result.Response[0]
 		cyanColorBoldPrint.Printf(" - %s\n", genAIModelName)
-		fmt.Println(messageTextProcessing.BoldifyTextInMarkdownRule(answer))
-		messageTextProcessing.AddMessageToChatSessionHistory(chatSession, "user", question)
-		messageTextProcessing.AddMessageToChatSessionHistory(chatSession, "model", answer)
+		fmt.Println(responseProcess.BoldifyTextInMarkdownRule(answer))
+		responseProcess.AddMessageToChatSessionHistory(chatSession, "user", question)
+		responseProcess.AddMessageToChatSessionHistory(chatSession, "model", answer)
 	}
 
 }

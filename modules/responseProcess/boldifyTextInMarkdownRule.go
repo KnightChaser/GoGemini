@@ -1,4 +1,4 @@
-package messageTextProcessing
+package responseProcess
 
 import (
 	"regexp"

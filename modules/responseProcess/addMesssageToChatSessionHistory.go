@@ -1,4 +1,4 @@
-package messageTextProcessing
+package responseProcess
 
 import "github.com/google/generative-ai-go/genai"
 
